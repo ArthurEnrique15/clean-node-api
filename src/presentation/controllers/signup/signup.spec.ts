@@ -2,15 +2,15 @@ import {
   InvalidParamError,
   MissingParamError,
   ServerError,
-} from "../../errors";
+} from '../../errors';
 
-import { SignUpController } from "./signup";
+import { SignUpController } from './signup';
 import {
   AccountModel,
   AddAccount,
   AddAccountModel,
   EmailValidator,
-} from "./signup-protocols";
+} from './signup-protocols';
 
 interface SutTypes {
   sut: SignUpController;
@@ -43,10 +43,10 @@ const makeAddAccount = (): AddAccount => {
   class AddAccountStub implements AddAccount {
     add(account: AddAccountModel): AccountModel {
       const fakeAccount = {
-        id: "valid_id",
-        name: "valid_name",
-        email: "valid_email@mail.com",
-        password: "valid_password",
+        id: 'valid_id',
+        name: 'valid_name',
+        email: 'valid_email@mail.com',
+        password: 'valid_password',
       };
 
       return fakeAccount;
@@ -69,66 +69,66 @@ const makeSut = (): SutTypes => {
   };
 };
 
-describe("SignUp Controller", () => {
-  test("should return 400 if no name is provided", () => {
+describe('SignUp Controller', () => {
+  test('should return 400 if no name is provided', () => {
     const { sut } = makeSut();
 
     const httpRequest = {
       body: {
-        email: "any_email@mail.com",
-        password: "any_password",
-        passwordConfirmation: "any_password",
+        email: 'any_email@mail.com',
+        password: 'any_password',
+        passwordConfirmation: 'any_password',
       },
     };
 
     const httpResponse = sut.handle(httpRequest);
 
     expect(httpResponse.statusCode).toBe(400);
-    expect(httpResponse.body).toEqual(new MissingParamError("name"));
+    expect(httpResponse.body).toEqual(new MissingParamError('name'));
   });
 
-  test("should return 400 if no email is provided", () => {
+  test('should return 400 if no email is provided', () => {
     const { sut } = makeSut();
 
     const httpRequest = {
       body: {
-        name: "any_name",
-        password: "any_password",
-        passwordConfirmation: "any_password",
+        name: 'any_name',
+        password: 'any_password',
+        passwordConfirmation: 'any_password',
       },
     };
 
     const httpResponse = sut.handle(httpRequest);
 
     expect(httpResponse.statusCode).toBe(400);
-    expect(httpResponse.body).toEqual(new MissingParamError("email"));
+    expect(httpResponse.body).toEqual(new MissingParamError('email'));
   });
 
-  test("should return 400 if no password is provided", () => {
+  test('should return 400 if no password is provided', () => {
     const { sut } = makeSut();
 
     const httpRequest = {
       body: {
-        name: "any_name",
-        email: "any_email@mail.com",
-        passwordConfirmation: "any_password",
+        name: 'any_name',
+        email: 'any_email@mail.com',
+        passwordConfirmation: 'any_password',
       },
     };
 
     const httpResponse = sut.handle(httpRequest);
 
     expect(httpResponse.statusCode).toBe(400);
-    expect(httpResponse.body).toEqual(new MissingParamError("password"));
+    expect(httpResponse.body).toEqual(new MissingParamError('password'));
   });
 
-  test("should return 400 if no password confirmation is provided", () => {
+  test('should return 400 if no password confirmation is provided', () => {
     const { sut } = makeSut();
 
     const httpRequest = {
       body: {
-        name: "any_name",
-        email: "any_email@mail.com",
-        password: "any_password",
+        name: 'any_name',
+        email: 'any_email@mail.com',
+        password: 'any_password',
       },
     };
 
@@ -136,19 +136,19 @@ describe("SignUp Controller", () => {
 
     expect(httpResponse.statusCode).toBe(400);
     expect(httpResponse.body).toEqual(
-      new MissingParamError("passwordConfirmation")
+      new MissingParamError('passwordConfirmation')
     );
   });
 
-  test("should return 400 if password confirmation fails", () => {
+  test('should return 400 if password confirmation fails', () => {
     const { sut } = makeSut();
 
     const httpRequest = {
       body: {
-        name: "any_name",
-        email: "any_email@mail.com",
-        password: "any_password",
-        passwordConfirmation: "invalid_password",
+        name: 'any_name',
+        email: 'any_email@mail.com',
+        password: 'any_password',
+        passwordConfirmation: 'invalid_password',
       },
     };
 
@@ -156,43 +156,43 @@ describe("SignUp Controller", () => {
 
     expect(httpResponse.statusCode).toBe(400);
     expect(httpResponse.body).toEqual(
-      new InvalidParamError("passwordConfirmation")
+      new InvalidParamError('passwordConfirmation')
     );
   });
 
-  test("should return 400 if an invalid email is provided", () => {
+  test('should return 400 if an invalid email is provided', () => {
     const { sut, emailValidatorStub } = makeSut();
 
     // mockando o valor como false apenas no teste que precisa que o valor seja false para não influenciar os outros testes
-    jest.spyOn(emailValidatorStub, "isValid").mockReturnValueOnce(false);
+    jest.spyOn(emailValidatorStub, 'isValid').mockReturnValueOnce(false);
 
     const httpRequest = {
       body: {
-        name: "any_name",
-        email: "invalid_email@mail.com",
-        password: "any_password",
-        passwordConfirmation: "any_password",
+        name: 'any_name',
+        email: 'invalid_email@mail.com',
+        password: 'any_password',
+        passwordConfirmation: 'any_password',
       },
     };
 
     const httpResponse = sut.handle(httpRequest);
 
     expect(httpResponse.statusCode).toBe(400);
-    expect(httpResponse.body).toEqual(new InvalidParamError("email"));
+    expect(httpResponse.body).toEqual(new InvalidParamError('email'));
   });
 
-  test("should call EmailValidator with correct email", () => {
+  test('should call EmailValidator with correct email', () => {
     const { sut, emailValidatorStub } = makeSut();
 
     // mockando o valor como false apenas no teste que precisa que o valor seja false para não influenciar os outros testes
-    const isValidSpy = jest.spyOn(emailValidatorStub, "isValid");
+    const isValidSpy = jest.spyOn(emailValidatorStub, 'isValid');
 
     const httpRequest = {
       body: {
-        name: "any_name",
-        email: "any_email@mail.com",
-        password: "any_password",
-        passwordConfirmation: "any_password",
+        name: 'any_name',
+        email: 'any_email@mail.com',
+        password: 'any_password',
+        passwordConfirmation: 'any_password',
       },
     };
 
@@ -201,22 +201,22 @@ describe("SignUp Controller", () => {
     expect(isValidSpy).toHaveBeenCalledWith(httpRequest.body.email);
   });
 
-  test("should return 500 if EmailValidator throws an error", () => {
+  test('should return 500 if EmailValidator throws an error', () => {
     // const emailValidatorStub = makeEmailValidatorWithError()
     // const sut = new SignUpController(emailValidatorStub)
 
     const { sut, emailValidatorStub } = makeSut();
 
-    jest.spyOn(emailValidatorStub, "isValid").mockImplementationOnce(() => {
+    jest.spyOn(emailValidatorStub, 'isValid').mockImplementationOnce(() => {
       throw new Error();
     });
 
     const httpRequest = {
       body: {
-        name: "any_name",
-        email: "invalid_email@mail.com",
-        password: "any_password",
-        passwordConfirmation: "any_password",
+        name: 'any_name',
+        email: 'invalid_email@mail.com',
+        password: 'any_password',
+        passwordConfirmation: 'any_password',
       },
     };
 
@@ -226,42 +226,42 @@ describe("SignUp Controller", () => {
     expect(httpResponse.body).toEqual(new ServerError());
   });
 
-  test("should call AddAccount with correct values", () => {
+  test('should call AddAccount with correct values', () => {
     const { sut, addAccountStub } = makeSut();
 
-    const addSpy = jest.spyOn(addAccountStub, "add");
+    const addSpy = jest.spyOn(addAccountStub, 'add');
 
     const httpRequest = {
       body: {
-        name: "any_name",
-        email: "any_email@mail.com",
-        password: "any_password",
-        passwordConfirmation: "any_password",
+        name: 'any_name',
+        email: 'any_email@mail.com',
+        password: 'any_password',
+        passwordConfirmation: 'any_password',
       },
     };
 
     sut.handle(httpRequest);
 
     expect(addSpy).toHaveBeenCalledWith({
-      name: "any_name",
-      email: "any_email@mail.com",
-      password: "any_password",
+      name: 'any_name',
+      email: 'any_email@mail.com',
+      password: 'any_password',
     });
   });
 
-  test("should return 500 if AddAccount throws an error", () => {
+  test('should return 500 if AddAccount throws an error', () => {
     const { sut, addAccountStub } = makeSut();
 
-    jest.spyOn(addAccountStub, "add").mockImplementationOnce(() => {
+    jest.spyOn(addAccountStub, 'add').mockImplementationOnce(() => {
       throw new Error();
     });
 
     const httpRequest = {
       body: {
-        name: "any_name",
-        email: "any_email@mail.com",
-        password: "any_password",
-        passwordConfirmation: "any_password",
+        name: 'any_name',
+        email: 'any_email@mail.com',
+        password: 'any_password',
+        passwordConfirmation: 'any_password',
       },
     };
 
@@ -271,15 +271,15 @@ describe("SignUp Controller", () => {
     expect(httpResponse.body).toEqual(new ServerError());
   });
 
-  test("should return 200 if valid data is provided", () => {
+  test('should return 200 if valid data is provided', () => {
     const { sut } = makeSut();
 
     const httpRequest = {
       body: {
-        name: "valid_name",
-        email: "valid_email@mail.com",
-        password: "valid_password",
-        passwordConfirmation: "valid_password",
+        name: 'valid_name',
+        email: 'valid_email@mail.com',
+        password: 'valid_password',
+        passwordConfirmation: 'valid_password',
       },
     };
 
@@ -287,10 +287,10 @@ describe("SignUp Controller", () => {
 
     expect(httpResponse.statusCode).toBe(200);
     expect(httpResponse.body).toEqual({
-      id: "valid_id",
-      name: "valid_name",
-      email: "valid_email@mail.com",
-      password: "valid_password",
+      id: 'valid_id',
+      name: 'valid_name',
+      email: 'valid_email@mail.com',
+      password: 'valid_password',
     });
   });
 });
