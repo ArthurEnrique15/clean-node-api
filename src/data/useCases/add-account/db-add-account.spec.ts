@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Encrypter } from '../../protocols/encrypter';
 
 import { DbAddAccount } from './db-add-account';
