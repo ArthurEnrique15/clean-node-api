@@ -2,6 +2,11 @@ import { Encrypter } from '../../protocols/encrypter';
 
 import { DbAddAccount } from './db-add-account';
 
+interface SutTypes {
+  sut: DbAddAccount;
+  encrypterStub: Encrypter;
+}
+
 const makeEncrypter = () => {
   class EncrypterStub implements Encrypter {
     async encrypt(value: string): Promise<string> {
@@ -12,7 +17,7 @@ const makeEncrypter = () => {
   return new EncrypterStub();
 };
 
-const makeSut = () => {
+const makeSut = (): SutTypes => {
   const encrypterStub = makeEncrypter();
   const sut = new DbAddAccount(encrypterStub);
 
