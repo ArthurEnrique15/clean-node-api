@@ -43,4 +43,25 @@ describe('DbAddAccount UseCase', () => {
 
     expect(encryptSpy).toHaveBeenCalledWith(accountData.password);
   });
+
+  test('Should throw if Encrypter throws', async () => {
+    const { sut, encrypterStub } = makeSut();
+
+    // mockando uma dependência do sut, fazendo ela retornar uma exception
+    jest
+      .spyOn(encrypterStub, 'encrypt')
+      .mockReturnValueOnce(
+        new Promise((resolve, reject) => reject(new Error()))
+      );
+
+    const accountData = {
+      name: 'valid_name',
+      email: 'valid_email@mail.com',
+      password: 'valid_password',
+    };
+
+    // espera que ao chamar o sut e a dependência retornar uma exception, o sut dê um throw na exception (que é tratada no SignUpController)
+    const promise = sut.add(accountData);
+    await expect(promise).rejects.toThrow();
+  });
 });
