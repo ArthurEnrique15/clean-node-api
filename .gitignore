@@ -2,3 +2,5 @@ node_modules
 dist
 coverage
 commit-types.txt
+.env
+globalConfig.json
