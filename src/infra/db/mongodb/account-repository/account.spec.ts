@@ -1,6 +1,3 @@
-// import { MongoClient } from 'mongodb';
-import { MongoClient } from 'mongodb';
-
 import { MongoHelper } from '../helpers/mongo-helper';
 
 import { AccountMongoRepository } from './account';
