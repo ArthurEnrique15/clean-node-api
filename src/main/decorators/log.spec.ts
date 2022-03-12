@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Controller,
   HttpRequest,
@@ -56,8 +57,6 @@ describe('Log Controller Decorator', () => {
 
   test('Should return the same result of the controller', async () => {
     const { sut } = makeSut();
-
-    // const controllerSpy = jest.spyOn(controllerStub, 'handle');
 
     const httpRequest = {
       body: {
