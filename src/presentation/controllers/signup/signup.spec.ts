@@ -39,8 +39,7 @@ const makeAddAccount = (): AddAccount => {
         password: 'valid_password',
       };
 
-      // eslint-disable-next-line no-promise-executor-return
-      return new Promise((resolve) => resolve(fakeAccount));
+      return Promise.resolve(fakeAccount);
     }
   }
 
@@ -238,11 +237,7 @@ describe('SignUp Controller', () => {
   test('should return 500 if AddAccount throws an error', async () => {
     const { sut, addAccountStub } = makeSut();
 
-    jest.spyOn(addAccountStub, 'add').mockImplementationOnce(() => {
-      return new Promise((resolve, reject) => {
-        reject(new Error());
-      });
-    });
+    jest.spyOn(addAccountStub, 'add').mockRejectedValueOnce(new Error());
 
     const httpRequest = {
       body: {
