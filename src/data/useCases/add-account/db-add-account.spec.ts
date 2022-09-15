@@ -23,7 +23,7 @@ const makeAddAccountRepository = () => {
         password: 'hashed_password',
       };
 
-      return new Promise((resolve) => resolve(fakeAccount));
+      return Promise.resolve(fakeAccount);
     }
   }
 
@@ -33,7 +33,7 @@ const makeAddAccountRepository = () => {
 const makeEncrypter = () => {
   class EncrypterStub implements Encrypter {
     async encrypt(value: string): Promise<string> {
-      return new Promise((resolve) => resolve('hashed_password'));
+      return Promise.resolve('hashed_password');
     }
   }
 
@@ -73,11 +73,7 @@ describe('DbAddAccount UseCase', () => {
     const { sut, encrypterStub } = makeSut();
 
     // mockando uma dependência do sut, fazendo ela retornar uma exception
-    jest
-      .spyOn(encrypterStub, 'encrypt')
-      .mockReturnValueOnce(
-        new Promise((resolve, reject) => reject(new Error()))
-      );
+    jest.spyOn(encrypterStub, 'encrypt').mockRejectedValueOnce(new Error());
 
     const accountData = {
       name: 'valid_name',
@@ -115,9 +111,7 @@ describe('DbAddAccount UseCase', () => {
 
     jest
       .spyOn(addAccountRepositoryStub, 'add')
-      .mockReturnValueOnce(
-        new Promise((resolve, reject) => reject(new Error()))
-      );
+      .mockRejectedValueOnce(new Error());
 
     const accountData = {
       name: 'valid_name',

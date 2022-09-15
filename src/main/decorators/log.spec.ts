@@ -12,7 +12,7 @@ import { LogControllerDecorator } from './log';
 function makeLogErrorRepositoryStub(): LogErrorRepository {
   class LogErrorRepositoryStub implements LogErrorRepository {
     async log(stack: string): Promise<void> {
-      return new Promise((resolve) => resolve());
+      return Promise.resolve();
     }
   }
 
@@ -26,9 +26,7 @@ function makeControllerStub(): Controller {
         statusCode: 200,
         body: {},
       };
-      return new Promise((resolve) => {
-        resolve(httpResponse);
-      });
+      return Promise.resolve(httpResponse);
     }
   }
 
@@ -98,12 +96,7 @@ describe('Log Controller Decorator', () => {
     fakeError.stack = 'any_stack';
 
     const error = serverError(fakeError);
-
-    jest.spyOn(controllerStub, 'handle').mockReturnValueOnce(
-      new Promise((resolve) => {
-        resolve(error);
-      })
-    );
+    jest.spyOn(controllerStub, 'handle').mockResolvedValueOnce(error);
 
     const logSpy = jest.spyOn(logErrorRepositoryStub, 'log');
 
